@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danh Sách Job Chờ Duyệt</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+
+      header {
+        background-color: #4caf50;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+
+      header a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        background-color: #45a049;
+        padding: 8px 12px;
+        border-radius: 5px;
+      }
+
+      header a:hover {
+        background-color: #388e3c;
+      }
+
+      main {
+        padding: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      a {
+        text-decoration: none;
+        color: #4caf50;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <h1>Danh Sách Job Chờ Duyệt</h1>
+      <a href="/dashboard">Quay lại Dashboard</a>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <script>
+        // Hiển thị thông báo thành công nếu success = True
+        {% if success %}
+        alert("Cập nhật trạng thái thành công!");
+        {% endif %}
+      </script>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Mã Job</th>
+            <th>Mô Tả</th>
+            <th>Trạng Thái</th>
+            <th>Hành Động</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in jobs %}
+          <tr>
+            <td>{{ job['MaTTTD'] }}</td>
+            <td>{{ job['Motacongviec'] }}</td>
+            <td>{{ job['TrangThai'] }}</td>
+            <td>
+              <a href="/review_job/{{ job['MaTTTD'] }}">Duyệt</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body Styling */
+    body {
+      font-family: "Arial", sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Container Styling */
+    .container {
+      text-align: center;
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      margin: 50px auto;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .container:hover {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      transform: translateY(-5px);
+    }
+
+    h1 {
+      color: #4caf50;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    h2 {
+      color: #333;
+      font-size: 1.5rem;
+      margin-top: 30px;
+    }
+
+    /* Dropdown Styling */
+    select {
+      padding: 10px;
+      font-size: 1rem;
+      margin: 10px 0;
+      width: 100%;
+      max-width: 350px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      outline: none;
+      transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    select:focus {
+      border-color: #4caf50;
+      box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+    }
+
+    /* Button Styling */
+    button {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #ffffff;
+      background-color: #4caf50;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 12px 20px;
+      margin-top: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Back Button Styling */
+    .back-button {
+      text-decoration: none;
+      color: white;
+      background-color: #007bff;
+      padding: 10px 15px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      transition: background-color 0.3s ease, box-shadow 0.2s ease;
+    }
+
+    .back-button:hover {
+      background-color: #0056b3;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* List Styling */
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    ul li {
+      margin: 10px 0;
+      padding: 12px;
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    ul li:hover {
+      background-color: #f0f8e6;
+      transform: translateY(-2px);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px;
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      select {
+        max-width: 100%;
+      }
+    }
+  </style>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thông tin hội đồng tuyển dụng</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div style="text-align: center; margin-bottom: 20px">
+      <a href="{{ url_for('dashboard') }}" class="back-button"
+        >Back to Dashboard</a
+      >
+    </div>
+    <div class="container">
+      <h1>Chọn vòng tuyển dụng để xem chi tiết hội đồng tuyển dụng</h1>
+      <form id="committee-form">
+        <label for="MaDot" style="font-size: 1rem; font-weight: bold"
+          >Mã đợt:</label
+        >
+        <select id="MaDot" name="MaDot">
+          {% for ma_dot in ma_dot_values %}
+          <option value="{{ ma_dot }}">{{ ma_dot }}</option>
+          {% endfor %}
+        </select>
+        <button type="button" onclick="showCommittee()">
+          Hiển thị hội đồng tuyển dụng
+        </button>
+      </form>
+
+      <h2>Thành viên hội đồng tuyển dụng</h2>
+      <ul id="committee-list"></ul>
+    </div>
+
+    <script>
+      function showCommittee() {
+        var maDot = $("#MaDot").val();
+        $.post("/get_committee", { MaDot: maDot }, function (data) {
+          var list = $("#committee-list");
+          list.empty(); // Clear previous results
+          data.forEach(function (item) {
+            list.append("<li>" + item.Chucvu + ": " + item.TenNV + "</li>");
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

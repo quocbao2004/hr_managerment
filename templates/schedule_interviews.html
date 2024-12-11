@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Interviews</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .container {
+            max-width: 95%;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-dashboard {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn-dashboard:hover {
+            background-color: #45a049;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        td form {
+            display: inline-block;
+        }
+
+        td select, td input {
+            width: 90%;
+            padding: 5px;
+            margin: 0 auto;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        td select {
+            cursor: pointer;
+        }
+        .email-btn {
+        background-color: #007BFF;
+        color: white;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
+
+    .email-btn:hover {
+        background-color: #0056b3;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Schedule Interviews</h1>
+    </header>
+    <div class="container">
+        <a href="/dashboard" class="btn-dashboard">Quay lại Dashboard</a>
+
+        <form method="GET" class="form-group">
+            <select name="ma_dtd">
+                <option value="" disabled {{ 'selected' if not selected_dtd else '' }}>Chọn đợt tuyển dụng</option>
+                {% for recruitment in recruitments %}
+                <option value="{{ recruitment['MaDTD'] }}" {{ 'selected' if selected_dtd == recruitment['MaDTD'] else '' }}>
+                    {{ recruitment['MaDTD'] }} - {{ recruitment['NgayBD'] }} đến {{ recruitment['NgayKT'] }}
+                </option>
+                {% endfor %}
+            </select>
+            <button type="submit">Lọc</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã phiếu</th>
+                    <th>Tên ứng viên</th>
+                    <th>Vị trí</th>
+                    <th>Email</th>
+                    <th>Ngày phỏng vấn</th>
+                    <th>Giờ phỏng vấn</th>
+                    <th>Địa điểm</th>
+                    <th>Trạng thái</th>
+                    <th>Gửi mail</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for interview in interviews %}
+                <tr>
+                    <td>{{ interview['MaPhieu'] }}</td>
+                    <td>{{ interview['Hoten'] }}</td>
+                    <td>{{ interview['Vitri'] }}</td>
+                    <td>{{ interview['Email'] }}</td>
+                    <td>
+                        <form action="/update_field" method="POST">
+                            <input type="hidden" name="MaPhieu" value="{{ interview['MaPhieu'] }}">
+                            <input type="hidden" name="field" value="NgayPhongVan">
+                            <input type="date" name="value" value="{{ interview['NgayPhongVan'] }}" onchange="this.form.submit()">
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/update_field" method="POST">
+                            <input type="hidden" name="MaPhieu" value="{{ interview['MaPhieu'] }}">
+                            <input type="hidden" name="field" value="GioPhongVan">
+                            <input type="time" name="value" value="{{ interview['GioPhongVan'] }}" onchange="this.form.submit()">
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/update_field" method="POST">
+                            <input type="hidden" name="MaPhieu" value="{{ interview['MaPhieu'] }}">
+                            <input type="hidden" name="field" value="DiaDiem">
+                            <input type="text" name="value" value="{{ interview['DiaDiem'] }}" onchange="this.form.submit()">
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/update_field" method="POST">
+                            <input type="hidden" name="MaPhieu" value="{{ interview['MaPhieu'] }}">
+                            <input type="hidden" name="field" value="TrangThai">
+                            <select name="value" onchange="this.form.submit()">
+                                <option value="Chưa duyệt" {% if interview['TrangThai'] == 'Chưa duyệt' %} selected {% endif %}>Chưa duyệt</option>
+                                <option value="Đã duyệt" {% if interview['TrangThai'] == 'Đã duyệt' %} selected {% endif %}>Đã duyệt</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{{ url_for('send_email') }}" method="POST">
+                            <input type="hidden" name="Email" value="{{ interview['Email'] }}">
+                            <input type="hidden" name="Hoten" value="{{ interview['Hoten'] }}">
+                            <input type="hidden" name="NgayPhongVan" value="{{ interview['NgayPhongVan'] }}">
+                            <input type="hidden" name="GioPhongVan" value="{{ interview['GioPhongVan'] }}">
+                            <input type="hidden" name="DiaDiem" value="{{ interview['DiaDiem'] }}">
+                            <button type="submit" class="email-btn">Gửi Email</button>
+                        </form>
+                    </td>
+                    
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8">Không có dữ liệu phỏng vấn.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

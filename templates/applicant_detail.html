@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi tiết ứng viên</title>
+    <style>
+      /* Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-size: 2rem;
+      }
+
+      .container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+      }
+
+      .detail-item {
+        margin-bottom: 15px;
+        font-size: 1rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .detail-item strong {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #34495e;
+      }
+
+      .detail-item img {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .cv-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        text-align: center;
+        box-shadow: 0 3px 6px rgba(0, 123, 255, 0.4);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .cv-link:hover {
+        background-color: #0056b3;
+        box-shadow: 0 5px 10px rgba(0, 123, 255, 0.6);
+      }
+
+      .back-btn {
+        display: block;
+        text-align: center;
+        margin: 30px auto 0;
+        padding: 10px 20px;
+        background-color: #27ae60;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        width: fit-content;
+        box-shadow: 0 3px 6px rgba(39, 174, 96, 0.4);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .back-btn:hover {
+        background-color: #1e8449;
+        box-shadow: 0 5px 10px rgba(39, 174, 96, 0.6);
+      }
+
+      .img-cv {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+        margin-top: 15px;
+      }
+
+      .title-divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+      }
+
+      .title-divider::before,
+      .title-divider::after {
+        content: "";
+        flex: 1;
+        border-top: 1px solid #ddd;
+      }
+
+      .title-divider span {
+        margin: 0 10px;
+        font-size: 0.9rem;
+        color: #888;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Chi tiết ứng viên</h1>
+    <div class="container">
+      <div class="detail-item">
+        <strong>Mã hồ sơ:</strong> {{ applicant['MaHS_UV'] }}
+      </div>
+      <div class="detail-item">
+        <strong>Họ tên:</strong> {{ applicant['Hoten'] }}
+      </div>
+      <div class="detail-item">
+        <strong>Ngày sinh:</strong> {{ applicant['Ngaysinh'] }}
+      </div>
+      <div class="detail-item">
+        <strong>Email:</strong> {{ applicant['Email'] }}
+      </div>
+      <div class="detail-item">
+        <strong>Số điện thoại:</strong> {{ applicant['SDT'] }}
+      </div>
+      <div class="detail-item">
+        <strong>Kỹ năng:</strong> {{ applicant['Skills'] }}
+      </div>
+      <div class="detail-item">
+        <strong>Vị trí ứng tuyển:</strong> {{ applicant['Vitri'] }}
+      </div>
+      <div class="detail-item">
+        <strong>Trạng thái:</strong> {{ applicant['TrangThai'] }}
+      </div>
+
+      <div class="title-divider">
+        <span>Thông tin bổ sung</span>
+      </div>
+
+      <div class="detail-item">
+        <strong>Ảnh:</strong>
+        {% if applicant['Photo_FilePath'] %}
+        <img
+          class="img-cv"
+          src="/{{ applicant['Photo_FilePath'] }}"
+          alt="Ảnh ứng viên"
+        />
+        {% else %}
+        <p>Không có ảnh</p>
+        {% endif %}
+      </div>
+      <div class="detail-item">
+        <strong>CV:</strong>
+        {% if applicant['CV_FilePath'] %}
+        <a
+          href="/{{ applicant['CV_FilePath'] }}"
+          class="cv-link"
+          target="_blank"
+          >Tải CV</a
+        >
+        {% else %}
+        <p>Không có CV</p>
+        {% endif %}
+      </div>
+      <a href="{{ url_for('dashboard') }}" class="back-btn">Quay lại</a>
+    </div>
+  </body>
+</html>

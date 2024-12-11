@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recruitment Committee</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #4caf50;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+        text-align: center;
+        padding: 10px;
+      }
+
+      th {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .update-btn {
+        background-color: #2196f3;
+      }
+
+      .update-btn:hover {
+        background-color: #0b7dda;
+      }
+
+      .email-btn {
+        background-color: #4caf50;
+      }
+
+      .email-btn:hover {
+        background-color: #45a049;
+      }
+
+      .flash {
+        color: green;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Recruitment Committee</h1>
+
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="flash">
+      {% for message in messages %}
+      <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <table>
+      <thead>
+        <tr>
+          <th>MaHS_UV</th>
+          <th>Hoten</th>
+          <th>Vitri</th>
+          <th>Email</th>
+          <th>SDT</th>
+          <th>Ngaynop</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for candidate in candidates %}
+        <tr>
+          <td>{{ candidate[0] }}</td>
+          <td>{{ candidate[4] }}</td>
+          <td>{{ candidate[2] }}</td>
+          <td>{{ candidate[7] }}</td>
+          <td>{{ candidate[6] }}</td>
+          <td>{{ candidate[1] }}</td>
+          <td>
+            <form method="POST" style="display: inline">
+              <input
+                type="hidden"
+                name="candidate_id"
+                value="{{ candidate[0] }}"
+              />
+              <button type="submit" name="update_status" class="btn update-btn">
+                Cập Nhật
+              </button>
+            </form>
+            <form method="POST" style="display: inline">
+              <input
+                type="hidden"
+                name="candidate_email"
+                value="{{ candidate[7] }}"
+              />
+              <input
+                type="hidden"
+                name="candidate_name"
+                value="{{ candidate[4] }}"
+              />
+              <button type="submit" name="send_offer" class="btn email-btn">
+                Gửi Mail
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

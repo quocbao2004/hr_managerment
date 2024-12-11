@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicant Review</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px;
+            background-color: #4CAF50;
+        }
+        .back-button {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #333;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #555;
+        }
+        .form-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px auto;
+            max-width: 80%;
+        }
+        .form-group select, .form-group button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+        .table-container {
+            margin: 20px auto;
+            width: 90%;
+            overflow-x: auto;
+            background: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: center;
+            padding: 12px;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .status-select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        .update-btn {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .update-btn:hover {
+            background-color: #45a049;
+        }
+        .flash-message {
+            max-width: 80%;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .flash-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .flash-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <a href="{{ url_for('dashboard') }}" class="back-button">Back to Dashboard</a>
+    </div>
+    <h1>Applicant Review</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div>
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Filter Form -->
+    <form method="GET" class="form-group">
+        <select name="ma_dtd">
+            <option value="" {% if not selected_dtd %}selected{% endif %}>Chọn đợt tuyển dụng</option>
+            {% for recruitment in recruitments %}
+            <option value="{{ recruitment['MaDTD'] }}" {% if selected_dtd == recruitment['MaDTD'] %}selected{% endif %}>
+                {{ recruitment['MaDTD'] }} - {{ recruitment['NgayBD'] }} đến {{ recruitment['NgayKT'] }}
+            </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="update-btn">Lọc</button>
+        <button type="submit" name="filter_status" value="dat_yeu_cau" class="update-btn"
+            {% if filter_status == 'dat_yeu_cau' %}style="background-color: lightblue;"{% endif %}>
+            Chỉ hiển thị "Đạt yêu cầu"
+        </button>
+        <button type="submit" name="filter_status" value="" class="update-btn" style="margin-left: 10px;">
+            Hiển thị tất cả
+        </button>
+    </form>
+
+    <!-- Applications Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã ứng viên</th>
+                    <th>Tên ứng viên</th>
+                    <th>Vị trí</th>
+                    <th>Kỹ năng</th>
+                    <th>Email</th>
+                    <th>CV</th>
+                    <th>Ảnh</th>
+                    <!-- Nếu trạng thái chưa đạt yêu cầu -->
+                    {% if not filter_status or filter_status != 'dat_yeu_cau' %}
+                    <th>Trạng thái</th>
+                    {% else %}
+                    <th>Pass</th>
+                    {% endif %}
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications_data %}
+                <tr>
+                    <td>{{ app['MaHS_UV'] }}</td>
+                    <td>{{ app['Hoten'] }}</td>
+                    <td>{{ app['Vitri'] }}</td>
+                    <td>{{ app['Skills'] }}</td>
+                    <td>{{ app['Email'] }}</td>
+                    <td>
+                        {% if app['CV_FilePath'] %}
+                        <a href="/{{ app['CV_FilePath'] }}" target="_blank">View CV</a>
+                        {% else %}
+                        No CV Uploaded
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if app['Photo_FilePath'] %}
+                        <img src="/{{ app['Photo_FilePath'] }}" alt="Photo" style="width:100px;height:100px;">
+                        {% else %}
+                        No Photo Uploaded
+                        {% endif %}
+                    </td>
+                    <!-- Hiển thị Trạng thái hoặc IsPassed tùy theo điều kiện -->
+                    {% if app['TrangThai'] != 'Đạt yêu cầu' %}
+                    <!-- Form cập nhật Trạng thái -->
+                    <form action="{{ url_for('update_status') }}" method="POST">
+                    <td>
+                        
+                            <input type="hidden" name="MaHS_UV" value="{{ app['MaHS_UV'] }}">
+                            <select name="TrangThai" class="status-select">
+                                <option value="Đang xét duyệt" {% if app['TrangThai'] == 'Đang xét duyệt' %}selected{% endif %}>Đang xét duyệt</option>
+                                <option value="Đạt yêu cầu" {% if app['TrangThai'] == 'Đạt yêu cầu' %}selected{% endif %}>Đạt yêu cầu</option>
+                                <option value="Không đạt yêu cầu" {% if app['TrangThai'] == 'Không đạt yêu cầu' %}selected{% endif %}>Không đạt yêu cầu</option>
+                            </select>
+                            
+                        
+                    </td>
+                    <td>
+                        <button type="submit" class="update-btn">Update</button>
+                    </td>
+                    </form>
+                    {% else %}
+                    <!-- Form cập nhật IsPassed -->
+                    <form action="{{ url_for('update_ispassed') }}" method="POST">
+                    <td>
+                            <input type="hidden" name="MaHS_UV" value="{{ app['MaHS_UV'] }}">
+                            <select name="IsPassed" class="status-select">
+                                <option value="Chưa xét" {% if app['IsPassed'] == 'Chưa xét' %}selected{% endif %}>Chưa xét</option>
+                                <option value="Đậu" {% if app['IsPassed'] == 'Đậu' %}selected{% endif %}>Đậu</option>
+                                <option value="Không đậu" {% if app['IsPassed'] == 'Không đậu' %}selected{% endif %}>Không đậu</option>
+                            </select>   
+                    </td>
+                    <td>
+                        <button type="submit" class="update-btn">Update</button>
+                    </td>
+                    </form>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+    </div>
+</body>
+</html>

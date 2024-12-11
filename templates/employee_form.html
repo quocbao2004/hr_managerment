@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Form</title>
+</head>
+<body>
+    <h1>Add Employee</h1>
+    <form action="{{ url_for('add_employee') }}" method="POST">
+        <label for="employee_id">Employee ID:</label><br>
+        <input type="text" id="employee_id" name="employee_id" required><br><br>
+        
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="birth_date">Birth Date:</label><br>
+        <input type="date" id="birth_date" name="birth_date" required><br><br>
+        
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" name="address" required><br><br>
+        
+        <label for="position">Position:</label><br>
+        <input type="text" id="position" name="position" required><br><br>
+        
+        <label for="role">Role:</label><br>
+        <select id="role" name="role" required>
+            <option value="Giám đốc">Giám đốc (Director)</option>
+            <option value="Trưởng phòng">Trưởng phòng (Department Head)</option>
+            <option value="HR">HR (Human Resources)</option>
+            <option value="Nhân viên">Nhân viên (Employee)</option>
+        </select><br><br>
+        
+        <label for="department_id">Department ID:</label><br>
+        <select id="department_id" name="department_id" required>
+            <option value="PB01">Phòng Kỹ Thuật</option>
+            <option value="PB02">Phòng Kinh Doanh</option>
+            <option value="PB03">Phòng Nhân Sự</option>
+            <option value="PB04">Phòng Marketing</option>
+            <option value="PB05">Phòng Tài Chính</option>
+        </select><br><br>
+        
+        <input type="submit" value="Add Employee">
+    </form>
+</body>
+</html>

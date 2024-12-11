@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Form</title>
+</head>
+<body>
+    <h1>Add HR Data</h1>
+    <form action="{{ url_for('add_hr_data') }}" method="POST">
+        <label for="hr_id">HR ID:</label><br>
+        <input type="text" id="hr_id" name="hr_id" required><br><br>
+        
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="department">Department:</label><br>
+        <select id="department" name="department" required>
+            <option value="PB01">Phòng Kỹ Thuật</option>
+            <option value="PB02">Phòng Kinh Doanh</option>
+            <option value="PB03">Phòng Nhân Sự</option>
+            <option value="PB04">Phòng Marketing</option>
+            <option value="PB05">Phòng Tài Chính</option>
+        </select><br><br>
+        
+        <label for="role">Role:</label><br>
+        <select id="role" name="role" required>
+            <option value="Giám đốc">Giám đốc (Director)</option>
+            <option value="Trưởng phòng">Trưởng phòng (Department Head)</option>
+            <option value="HR">HR (Human Resources)</option>
+            <option value="Nhân viên">Nhân viên (Employee)</option>
+        </select><br><br>
+        
+        <input type="submit" value="Add HR Data">
+    </form>
+</body>
+</html>

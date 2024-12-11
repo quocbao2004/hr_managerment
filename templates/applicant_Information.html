@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin ứng viên</title>
+    <style>
+        .flash-message {
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            max-width: 90%;
+            font-size: 16px;
+        }
+
+        .flash-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            background-color: #fff;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background-color: #45a049;
+        }
+
+        select, textarea {
+            padding: 5px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            width: 100%;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px auto;
+            max-width: 90%;
+        }
+
+        .filter-container select, .filter-container button {
+            margin-left: -27px;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .filter-container button {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .filter-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thông tin ứng viên</h1>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div>
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Filter and Navigation -->
+    <div class="filter-container">
+        <a href="{{ url_for('dashboard') }}">
+            <button class="action-btn">Quay lại Dashboard</button>
+        </a>
+
+        <form method="GET">
+            <select name="ma_dtd">
+                <option value="" {% if not selected_dtd %}selected{% endif %}>Chọn đợt tuyển dụng</option>
+                {% for recruitment in recruitments %}
+                <option value="{{ recruitment['MaDTD'] }}" {% if selected_dtd == recruitment['MaDTD'] %}selected{% endif %}>
+                    {{ recruitment['MaDTD'] }} - {{ recruitment['NgayBD'] }} đến {{ recruitment['NgayKT'] }}
+                </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="action-btn">Lọc</button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã phiếu</th>
+                    <th>Mã ứng viên</th>
+                    <th>Mã nhân viên</th>
+                    <th>Ngày phỏng vấn</th>
+                    <th>Giờ phỏng vấn</th>
+                    <th>Địa điểm</th>
+                    <th>Kết quả phỏng vấn</th>
+                    <th>Câu trả lời</th>
+                    <th>Cập nhật</th>
+                    <th>Gửi email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for interview in interviews %}
+                <tr>
+                    <form action="{{ url_for('applicant_Information') }}" method="POST">
+                        <input type="hidden" name="MaPhieu" value="{{ interview['MaPhieu'] }}">
+                        <td>{{ interview['MaPhieu'] }}</td>
+                        <td><a href="{{ url_for('applicant_detail', ma_hs_uv=interview['MaUV']) }}" class="action-btn">{{ interview['MaUV'] }}</a></td>
+                        <td>{{ interview['MaNV'] }}</td>
+                        <td>{{ interview['NgayPhongVan'] }}</td>
+                        <td>{{ interview['GioPhongVan'] }}</td>
+                        <td>{{ interview['DiaDiem'] }}</td>
+                        <td>
+                            <select name="KetQuaPV" required>
+                                <option value="Khong phong van" {% if interview['KetQuaPV'] == "Khong phong van" %}selected{% endif %}>Không phỏng vấn</option>
+                                <option value="Dat" {% if interview['KetQuaPV'] == "Dat" %}selected{% endif %}>Đạt</option>
+                                <option value="Khong dat" {% if interview['KetQuaPV'] == "Khong dat" %}selected{% endif %}>Không đạt</option>
+                            </select>
+                        </td>
+                        <td>
+                            <textarea name="answer" rows="3">{{ interview['answer'] }}</textarea>
+                        </td>
+                        <td>
+                            <button type="submit" class="action-btn">Update</button>
+                        </td>
+                    </form>
+                    <td>
+                        <form action="{{ url_for('send_email_pass') }}" method="POST">
+                            <input type="hidden" name="MaUV" value="{{ interview['MaUV'] }}">
+                            <button type="submit" class="action-btn">Send Email</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

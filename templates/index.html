@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Employee Management System</title>
+    <style>
+      /* Optional: Styling to make links look like buttons */
+      .button-link {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        background-color: #4caf50;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to the Employee Management System</h1>
+
+    <p>Please choose an option:</p>
+
+    <div>
+      <a href="{{ url_for('login_form') }}" class="button-link">Đăng nhập</a>
+    </div>
+    <br />
+
+    <div>
+      <a href="{{ url_for('recruitment') }}" class="button-link"
+        >Xem thông tin tuyển dụng</a
+      >
+    </div>
+
+    <!-- Displaying flashed messages -->
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+  </body>
+</html>

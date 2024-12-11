@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống kê phỏng vấn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .filter-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-container select, .filter-container button {
+            padding: 8px 12px;
+            font-size: 16px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .statistics-container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .stat-item span {
+            font-weight: bold;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .back-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thống kê kết quả phỏng vấn</h1>
+
+    <div class="filter-container">
+        <form method="GET" action="{{ url_for('interview_statistics') }}">
+            <select name="ma_dtd">
+                <option value="">Tất cả đợt tuyển dụng</option>
+                {% for recruitment in recruitments %}
+                <option value="{{ recruitment['MaDTD'] }}" {% if selected_dtd == recruitment['MaDTD'] %}selected{% endif %}>
+                    {{ recruitment['MaDTD'] }} ({{ recruitment['NgayBD'] }} - {{ recruitment['NgayKT'] }})
+                </option>
+                {% endfor %}
+            </select>
+            <button type="submit">Lọc</button>
+        </form>
+    </div>
+    
+
+    <div class="statistics-container">
+        <h2>Thống kê phỏng vấn</h2>
+        <div class="stat-item">
+            <span>Số lượng ứng viên ứng tuyển:</span>
+            <span>{{ total_applicants }}</span>
+        </div>
+        <div class="stat-item">
+            <span>Số lượng ứng viên ứng tuyển nhưng không đạt yêu cầu:</span>
+            <span>{{ failed_applicants }}</span>
+        </div>
+        <div class="stat-item">
+            <span>Số người được phỏng vấn:</span>
+            <span>{{ total_count }}</span>
+        </div>
+        <div class="stat-item">
+            <span>Số lượng đậu phỏng vấn:</span>
+            <span>{{ passed_count }}</span>
+        </div>
+        <div class="stat-item">
+            <span>Số lượng không đậu phỏng vấn:</span>
+            <span>{{ failed_count }}</span>
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="back-btn">Quay lại Dashboard</a>
+    </div>
+    
+</body>
+</html>

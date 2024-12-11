@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recruitment Information</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      h1 {
+        color: #333;
+        margin-top: 20px;
+        font-size: 24px;
+      }
+
+      .table-container {
+        width: 90%;
+        max-width: 1000px;
+        overflow-x: auto; /* Enable horizontal scroll for small screens */
+        margin-top: 20px;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .apply-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .apply-btn:hover {
+        background-color: #45a049;
+      }
+
+      /* Responsive Design for Smaller Screens */
+      @media (max-width: 600px) {
+        th,
+        td {
+          padding: 8px;
+          font-size: 12px;
+        }
+
+        .apply-btn {
+          padding: 6px 12px;
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Thông tin tuyển dụng</h1>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Mã đợt</th>
+            <th>Mã phòng ban</th>
+            <th>Mã vị trí</th>
+            <th>Yêu cầu</th>
+            <th>Số lượng</th>
+            <th>Trạng thái</th>
+            <th>Mô tả công việc</th>
+            <th>Mức lương</th>
+            <th>Nơi làm việc</th>
+            <th>Trình độ</th>
+            <th>Ngày kết thúc</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in recruitment_data %}
+          <tr>
+            <td>{{ row['MaTTTD'] }}</td>
+            <td>{{ row['MaDot'] }}</td>
+            <td>{{ row['MaPB'] }}</td>
+            <td>{{ row['MaVitri'] }}</td>
+            <td>{{ row['YeuCau'] }}</td>
+            <td>{{ row['SoLuong'] }}</td>
+            <td>{{ row['TrangThai'] }}</td>
+            <td>{{ row['Motacongviec'] }}</td>
+            <td>{{ row['Mucluong'] }}</td>
+            <td>{{ row['Noilamviec'] }}</td>
+            <td>{{ row['MaTrinhdo'] }}</td>
+            <td>{{ row['NgayKT'] }}</td>
+            <td>
+              {% if row['MaTTTD'] %}
+              <a
+                href="{{ url_for('apply_form', ma_tttd=row['MaTTTD']) }}"
+                class="apply-btn"
+                >Apply</a
+              >
+              {% else %}
+              <span>Not Available</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

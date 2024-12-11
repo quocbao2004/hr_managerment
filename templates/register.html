@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h2>Register</h2>
+    <form action="{{ url_for('register') }}" method="POST">
+        <label for="MaNV">Employee ID:</label>
+        <input type="text" id="MaNV" name="MaNV" required><br><br>
+
+        <label for="TenNV">Full Name:</label>
+        <input type="text" id="TenNV" name="TenNV" required><br><br>
+
+        <label for="Ngaysinh">Date of Birth:</label>
+        <input type="date" id="Ngaysinh" name="Ngaysinh" required><br><br>
+
+        <label for="Diachi">Address:</label>
+        <input type="text" id="Diachi" name="Diachi" required><br><br>
+
+        <label for="Chucvu">Position:</label>
+        <input type="text" id="Chucvu" name="Chucvu" required><br><br>
+
+        <label for="role">Role:</label>
+        <select id="role" name="Vaitro" required>
+            <option value="Giám đốc">Giám đốc (Director)</option>
+            <option value="Trưởng phòng">Trưởng phòng (Department Head)</option>
+            <option value="HR">HR (Human Resources)</option>
+            <option value="Nhân viên">Nhân viên (Employee)</option>
+        </select><br><br>
+
+        <label for="MaPB">Department:</label>
+        <select id="MaPB" name="MaPB" required>
+            <option value="PB01">Phòng Kỹ Thuật</option>
+            <option value="PB02">Phòng Kinh Doanh</option>
+            <option value="PB03">Phòng Nhân Sự</option>
+            <option value="PB04">Phòng Marketing</option>
+            <option value="PB05">Phòng Tài Chính</option>
+        </select><br><br>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="{{ url_for('login_form') }}">Log in here</a>.</p>
+</body>
+</html>

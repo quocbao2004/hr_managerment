@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <style>
+      /* General Styling */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      /* Container Styling */
+      .container {
+        text-align: center;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        width: 90%;
+      }
+
+      h1 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      p {
+        margin: 15px 0;
+      }
+
+      /* Button Styling */
+      button {
+        display: inline-block;
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #4caf50;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      button:hover {
+        background-color: #388e3c;
+        transform: translateY(-2px);
+      }
+
+      button:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Media Query for Responsive Layout */
+      @media (max-width: 768px) {
+        .container {
+          width: 80%;
+          padding: 20px;
+        }
+
+        button {
+          font-size: 14px;
+          padding: 10px 15px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 20px;
+        }
+
+        button {
+          font-size: 13px;
+          padding: 8px 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Dashboard</h1>
+      {% if session['role'] == 'Giám đốc'%}
+      <button onclick="location.href='{{ url_for('committee') }}'">
+        Xem hội đồng tuyển dụng
+      </button>
+      <button onclick="location.href='{{ url_for('pending_jobs') }}'">
+        Duyệt công việc được đăng
+      </button>
+      {% endif %} {% if session['role'] == 'Trưởng phòng'%}
+      <button onclick="location.href='{{ url_for('post_job') }}'">
+        Đăng thông tin tuyển dụng
+      </button>
+      {% endif %} {% if session['role'] == 'HR'%}
+      <button onclick="location.href='{{ url_for('employee_tasks') }}'">
+        Đăng công việc được duyệt
+      </button>
+      <button onclick="location.href='{{ url_for('applications') }}'">
+        Đánh giá hồ sơ ứng viên
+      </button>
+      <button onclick="location.href='{{ url_for('schedule_interviews') }}'">
+        Lên lịch phỏng vấn
+      </button>
+      {% endif %} {% if session['role'] in ['Giám đốc', 'Trưởng phòng'] %}
+      <button onclick="location.href='{{ url_for('applicant_Information') }}'">
+        Thông tin ứng viên
+      </button>
+      <button onclick="location.href='{{ url_for('create_recruitment') }}'">
+        Tạo đợt tuyển dụng
+      </button>
+      <button onclick="location.href='{{ url_for('interview_statistics') }}'">
+        Xem Thống Kê
+      </button>
+      {% endif %}
+      <button onclick="location.href='{{ url_for('logout') }}'">
+        Đăng xuất
+      </button>
+    </div>
+  </body>
+</html>
